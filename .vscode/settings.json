@@ -3,6 +3,7 @@
         "curve.h": "c",
         "exhaustive.h": "c",
         "metadata.h": "c",
-        "point.h": "c"
+        "point.h": "c",
+        "brainpool.h": "c"
     }
 }

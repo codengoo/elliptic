@@ -7,7 +7,7 @@
 
 bool init(void) {
 	// init PARI, 1GB stack, 1M primes
-	pari_init(cfg->memory, 1000000);
+	pari_init(1000000000, 1000000);
 
 	// init PARI PRNG
 	if (!random_init()) return false;
@@ -42,10 +42,8 @@ int main(int argc, char *argv[]) {
 	cfg->random = RANDOM_ALL;
 	cfg->unique = true;
 	cfg->count = 2;
-	cfg->memory = 1000000000;
 	cfg->threads = 1;
 	cfg->thread_memory = cfg->bits * 2000000;
-	cfg->format = FORMAT_JSON;
 
 	if (!init()) {
 		return quit(EXIT_FAILURE);

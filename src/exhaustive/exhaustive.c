@@ -5,8 +5,6 @@
 #include "exhaustive.h"
 #include "ansi.h"
 #include "arg.h"
-#include "brainpool.h"
-#include "brainpool_rfc.h"
 #include "check.h"
 #include "gen/curve.h"
 #include "gen/equation.h"
@@ -21,7 +19,6 @@
 #include "misc/config.h"
 #include "nums.h"
 #include "obj/curve.h"
-#include "util/memory.h"
 #include "util/timeout.h"
 
 void exhaustive_clear(exhaustive_t *setup) {
@@ -46,75 +43,11 @@ static void exhaustive_ginit(gen_f *generators) {
 	if (cfg->seed_algo) {
 		generators[OFFSET_ORDER] = &order_gen_prime;
 		generators[OFFSET_GENERATORS] = &gens_gen_one;
-
-		switch (cfg->seed_algo) {
-			case SEED_ANSI: {
-				// setup ANSI X9.62 generators
-				if (cfg->seed) {
-					generators[OFFSET_SEED] = &ansi_gen_seed_argument;
-				} else {
-					if (cfg->random & RANDOM_SEED) {
-						generators[OFFSET_SEED] = &ansi_gen_seed_random;
-					}
-				}
-				if (cfg->random & RANDOM_FIELD) {
-					generators[OFFSET_FIELD] = &field_gen_random;
-				}
-				generators[OFFSET_A] = &gen_skip;
-				generators[OFFSET_B] = &ansi_gen_equation;
-			} break;
-			case SEED_BRAINPOOL: {
-				if (cfg->seed) {
-					generators[OFFSET_SEED] = &brainpool_gen_seed_argument;
-				} else {
-					if (cfg->random & RANDOM_SEED) {
-						generators[OFFSET_SEED] = &brainpool_gen_seed_random;
-					}
-				}
-				generators[OFFSET_FIELD] = &brainpool_gen_field;
-				generators[OFFSET_A] = &gen_skip;
-				generators[OFFSET_B] = &brainpool_gen_equation;
-				generators[OFFSET_ORDER] = &order_gen_prime;
-				generators[OFFSET_GENERATORS] = &brainpool_gen_gens;
-			} break;
-			case SEED_BRAINPOOL_RFC: {
-				if (cfg->seed) {
-					generators[OFFSET_SEED] = &brainpool_rfc_gen_seed_argument;
-				} else {
-					if (cfg->random & RANDOM_SEED) {
-						generators[OFFSET_SEED] =
-						    &brainpool_rfc_gen_seed_random;
-					}
-				}
-				generators[OFFSET_FIELD] = &brainpool_gen_field;
-				generators[OFFSET_A] = &gen_skip;
-				generators[OFFSET_B] = &brainpool_rfc_gen_equation;
-				generators[OFFSET_ORDER] = &order_gen_prime;
-				generators[OFFSET_GENERATORS] = &brainpool_gen_gens;
-			} break;
-			case SEED_NUMS: {
-				generators[OFFSET_SEED] = &gen_skip;
-				generators[OFFSET_FIELD] = &nums_gen_field;
-				generators[OFFSET_A] = &nums_gen_a;
-				generators[OFFSET_B] =
-				    &nums_gen_b;  // TODO: Missing transformation from b -> -b.
-				generators[OFFSET_ORDER] = &nums_gen_order;
-				generators[OFFSET_GENERATORS] = &nums_gen_gens;
-			} break;
-			case SEED_FIPS:
-				break;
-			default:
-				break;
-		}
 	} else {
 		// setup normal generators
 		generators[OFFSET_SEED] = &gen_skip;
 		generators[OFFSET_ORDER] = &order_gen_prime;
 		generators[OFFSET_GENERATORS] = &gens_gen_one;
-
-		if (cfg->random & RANDOM_FIELD) {
-			generators[OFFSET_FIELD] = &field_gen_random;
-		}
 
 		if (cfg->koblitz) {
 			switch (cfg->koblitz_value) {
@@ -129,13 +62,6 @@ static void exhaustive_ginit(gen_f *generators) {
 			}
 			generators[OFFSET_B] = &b_gen_one;
 		} else {
-			if (cfg->random & RANDOM_A) {
-				generators[OFFSET_A] = &a_gen_random;
-			}
-
-			if (cfg->random & RANDOM_B) {
-				generators[OFFSET_B] = &b_gen_random;
-			}
 		}
 	}
 
