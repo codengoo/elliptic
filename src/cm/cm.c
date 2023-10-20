@@ -1,7 +1,3 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2017-2018 J08nY
- */
 #include "cm.h"
 #include "anomalous.h"
 #include "cm_any.h"
@@ -137,66 +133,7 @@ static int cm_init(exhaustive_t *setup) {
 	bool ord_prime = false;
 
 	char *order_s = NULL;
-	if (cfg->method == METHOD_CM) {
-		size_t delims = str_cnt(cfg->cm_order, ',');
-		GEN order;
-		if (delims == 0) {
-			order = strtoi(cfg->cm_order);
-			order_s = cfg->cm_order;
-		} else {
-			GEN factors = gtovec0(gen_0, delims + 1);
-			char *delim;
-			char *s_start = try_strdup(cfg->cm_order);
-			char *s = s_start;
-			long i = 1;
-			while (true) {
-				if ((delim = strchr(s, ',')) != NULL) {
-					*delim = 0;
-					gel(factors, i++) = strtoi(s);
-					s = delim + 1;
-				} else {
-					gel(factors, i++) = strtoi(s);
-					break;
-				}
-			}
-
-			order = gen_1;
-			long len = glength(factors);
-			for (long j = 1; j <= len; ++j) {
-				GEN factor = gel(factors, j);
-				if (isprime(factor)) {
-					addprimes(gtovec(factor));
-				} else {
-					GEN factored = Z_factor(order);
-					addprimes(gel(factored, 1));
-				}
-				order = mulii(order, factor);
-			}
-			try_free(s_start);
-			order_s = pari_sprintf("%Pi", order);
-		}
-		if (gequal0(order)) {
-			fprintf(err, "Order requested not a number: %s\n", cfg->cm_order);
-			return 1;
-		}
-		long ord_log = logint0(order, gen_2, NULL);
-		if (ord_log > cfg->bits) {
-			pari_fprintf(err,
-			             "Order requested does not fit(2^%li) into requested "
-			             "bitsize(2^%li): %Pi\n",
-			             ord_log, cfg->bits, order);
-			return 1;
-		}
-		if (delims == 0) {
-			ord_prime = (bool)isprime(order);
-		} else {
-			ord_prime = false;
-		}
-	}
-
-	if (cfg->method == METHOD_ANOMALOUS) {
-		anomalous_init();
-	}
+	anomalous_init();
 
 	cm_ginit(setup->generators, ord_prime);
 	cm_ainit(setup->gen_argss, setup->check_argss, order_s);
@@ -207,9 +144,7 @@ static int cm_init(exhaustive_t *setup) {
 }
 
 static void cm_quit(exhaustive_t *setup) {
-	if (cfg->method == METHOD_ANOMALOUS) {
-		anomalous_quit();
-	}
+	anomalous_quit();
 	exhaustive_clear(setup);
 }
 
