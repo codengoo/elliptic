@@ -128,7 +128,6 @@ CHECK(order_check_pohlig_hellman) {
 
 CHECK(order_check_discriminant) {
 	HAS_ARG(args);
-	if (cfg->field == FIELD_BINARY) return 1;
 	pari_sp ltop = avma;
 
 	const char *min_disc = args->args;

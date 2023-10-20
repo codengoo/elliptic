@@ -17,16 +17,8 @@ static GEN field_binaryr(unsigned long bits) {
 }
 
 GENERATOR(field_gen_random) {
-	switch (cfg->field) {
-		case FIELD_PRIME:
-			curve->field = field_primer(cfg->bits);
-			return 1;
-		case FIELD_BINARY:
-			curve->field = field_binaryr(cfg->bits);
-			return 1;
-		default:
-			return INT_MIN; /* NOT REACHABLE */
-	}
+	curve->field = field_primer(cfg->bits);
+	return 1;
 }
 
 static GEN field = NULL;

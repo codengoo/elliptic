@@ -94,7 +94,6 @@ GENERATOR(gens_gen_cofactor) {
 }
 
 CHECK(gens_check_anomalous) {
-	if (cfg->field == FIELD_BINARY) return 1;
 	for (size_t i = 0; i < curve->ngens; ++i) {
 		if (mpcmp(curve->field, curve->generators[i]->generator->order) == 0) {
 			return -5;
@@ -109,7 +108,6 @@ GEN gens_get_embedding(GEN prime, GEN generator_order) {
 
 CHECK(gens_check_embedding) {
 	HAS_ARG(args);
-	if (cfg->field == FIELD_BINARY) return 1;
 	pari_sp ltop = avma;
 
 	const char *min_degree = args->args;

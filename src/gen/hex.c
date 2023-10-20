@@ -57,12 +57,9 @@ CHECK(hex_check_param) {
 	}
 
 	if (state >= OFFSET_FIELD) {
-		if (cfg->field == FIELD_PRIME) {
-			params[OFFSET_FIELD] =
-			    pari_sprintf("%P0#*x", cfg->hex_digits, curve->field);
-			pari[OFFSET_FIELD] = true;
-		} else if (cfg->field == FIELD_BINARY) {
-		}
+		params[OFFSET_FIELD] =
+		    pari_sprintf("%P0#*x", cfg->hex_digits, curve->field);
+		pari[OFFSET_FIELD] = true;
 	}
 
 	if (state >= OFFSET_A) {

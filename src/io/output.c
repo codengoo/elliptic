@@ -29,19 +29,19 @@ static JSON_Value *output_json_point(point_t *point) {
 	JSON_Value *point_value = json_value_init_object();
 	JSON_Object *point_object = json_value_get_object(point_value);
 
-	// Set x property 
+	// Set x property
 	char *x = pari_sprintf("%P0#*x", cfg->hex_digits,
 	                       field_elementi(gel(point->point, 1)));
 	json_object_set_string(point_object, "x", x);
 	pari_free(x);
 
-	// Set y property 
+	// Set y property
 	char *y = pari_sprintf("%P0#*x", cfg->hex_digits,
 	                       field_elementi(gel(point->point, 2)));
 	json_object_set_string(point_object, "y", y);
 	pari_free(y);
 
-	// Set order property 
+	// Set order property
 	char *p_order = pari_sprintf("%P#x", point->order);
 	json_object_set_string(point_object, "order", p_order);
 	pari_free(p_order);
@@ -62,33 +62,10 @@ static JSON_Value *output_jjson(curve_t *curve) {
 	JSON_Value *root_value = json_value_init_object();
 	JSON_Object *root_object = json_value_get_object(root_value);
 
-	switch (cfg->field) {
-		case FIELD_PRIME: {
-			char *prime = pari_sprintf("%P0#*x", cfg->hex_digits, curve->field);
-			json_object_dotset_string(root_object, "field.p", prime);
-			pari_free(prime);
-			break;
-		}
-		case FIELD_BINARY: {
-			GEN field = field_params(curve->field);
-			char *m = pari_sprintf("%P#x", gel(field, 1));
-			char *e1 = pari_sprintf("%P#x", gel(field, 2));
-			char *e2 = pari_sprintf("%P#x", gel(field, 3));
-			char *e3 = pari_sprintf("%P#x", gel(field, 4));
-			json_object_dotset_string(root_object, "field.m", m);
-			json_object_dotset_string(root_object, "field.e1", e1);
-			json_object_dotset_string(root_object, "field.e2", e2);
-			json_object_dotset_string(root_object, "field.e3", e3);
-			pari_free(m);
-			pari_free(e1);
-			pari_free(e2);
-			pari_free(e3);
-			break;
-		}
-		default:
-			fprintf(err, "Error, field has unknown amount of elements.\n");
-			exit(1);
-	}
+	char *prime = pari_sprintf("%P0#*x", cfg->hex_digits, curve->field);
+	json_object_dotset_string(root_object, "field.p", prime);
+	pari_free(prime);
+
 	if (curve->seed) {
 		char *hex_str = bits_to_hex(curve->seed->seed);
 		char *hex = try_calloc(strlen(hex_str) + 3);
@@ -165,8 +142,7 @@ static JSON_Value *output_jjson(curve_t *curve) {
 		}
 		if (curve->meta.conductor != NULL) {
 			char *conductor = pari_sprintf("%Pi", curve->meta.conductor);
-			json_object_dotset_string(root_object, "meta.conductor",
-			                          conductor);
+			json_object_dotset_string(root_object, "meta.conductor", conductor);
 			pari_free(conductor);
 		}
 	}
@@ -258,15 +234,11 @@ bool output_init() {
 	}
 	setvbuf(verbose, NULL, _IONBF, 0);
 
-	switch (cfg->format) {
-		case FORMAT_JSON: {
-			output_s = &output_sjson;
-			output_s_separator = &output_sjson_separator;
-			output_s_begin = &output_sjson_begin;
-			output_s_end = &output_sjson_end;
-			break;
-		}
-	}
+	output_s = &output_sjson;
+	output_s_separator = &output_sjson_separator;
+	output_s_begin = &output_sjson_begin;
+	output_s_end = &output_sjson_end;
+	
 	return true;
 }
 

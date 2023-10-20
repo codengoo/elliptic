@@ -2,6 +2,7 @@
     "files.associations": {
         "curve.h": "c",
         "exhaustive.h": "c",
-        "metadata.h": "c"
+        "metadata.h": "c",
+        "point.h": "c"
     }
 }

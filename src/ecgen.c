@@ -38,12 +38,10 @@ int main(int argc, char *argv[]) {
 	memset(cfg, 0, sizeof(config_t));
 	
 	cfg->bits = 160;
-	cfg->field |= FIELD_PRIME;
 	cfg->method |= METHOD_ANOMALOUS;
 	cfg->random = RANDOM_ALL;
-	cfg->prime = true;
 	cfg->unique = true;
-	cfg->count = 1;
+	cfg->count = 2;
 	cfg->memory = 1000000000;
 	cfg->threads = 1;
 	cfg->thread_memory = cfg->bits * 2000000;

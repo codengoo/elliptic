@@ -109,7 +109,7 @@ extern char *(*output_s_end)();
  * @brief Output footer to a FILE *out in configured format.
  * @param out
  */
-void output_f_end(FILE *out);
+// void output_f_end(FILE *out);
 
 /**
  * @brief Output header to configured output in configured format.

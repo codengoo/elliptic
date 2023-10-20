@@ -9,8 +9,8 @@
 #include "io/output.h"
 #include "util/bits.h"
 #include "util/memory.h"
-#include "util/str.h"
 #include "util/random.h"
+#include "util/str.h"
 
 static seed_t *ansi_new() {
 	seed_t *result = seed_new();
@@ -146,13 +146,5 @@ static GENERATOR(ansi_gen_equation_f2m) {
 }
 
 GENERATOR(ansi_gen_equation) {
-	switch (cfg->field) {
-		case FIELD_PRIME:
-			return ansi_gen_equation_fp(curve, args, state);
-		case FIELD_BINARY:
-			return ansi_gen_equation_f2m(curve, args, state);
-		default:
-			pari_err_BUG("Field not prime or binary?");
-			return INT_MIN; /* NOT REACHABLE */
-	}
+	return ansi_gen_equation_fp(curve, args, state);
 }
