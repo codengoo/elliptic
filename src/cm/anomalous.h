@@ -10,7 +10,6 @@
 
 #include <pari/pari.h>
 #include "exhaustive/arg.h"
-#include "io/cli.h"
 #include "misc/types.h"
 
 typedef struct {
