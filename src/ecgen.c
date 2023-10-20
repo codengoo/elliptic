@@ -14,11 +14,6 @@ bool init(void) {
 
 	// init the signal handlers, etc. for timeout handling
 	if (!timeout_init()) return false;
-
-	// set datadir if specified
-	if (cfg->datadir) {
-		default0("datadir", cfg->datadir);
-	}
 	
 	// Fix the mysterious isprime bug.
 	isprime(stoi(1));
