@@ -4,6 +4,7 @@
         "exhaustive.h": "c",
         "metadata.h": "c",
         "point.h": "c",
-        "brainpool.h": "c"
+        "brainpool.h": "c",
+        "types.h": "c"
     }
 }

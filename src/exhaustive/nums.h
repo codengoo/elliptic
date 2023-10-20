@@ -1,7 +1,4 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2023 J08nY
- */
+
 /*
  * @file nums.h
  */

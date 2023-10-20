@@ -1,7 +1,4 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2017-2018 J08nY
- */
+
 #ifndef ECGEN_MATH_TWIST_H
 #define ECGEN_MATH_TWIST_H
 

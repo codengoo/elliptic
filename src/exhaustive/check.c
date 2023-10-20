@@ -1,7 +1,4 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2017-2018 J08nY
- */
+
 #include "check.h"
 #include "util/memory.h"
 

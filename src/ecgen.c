@@ -2,8 +2,8 @@
 #include "cm/cm.h"
 #include "exhaustive/exhaustive.h"
 #include "io/output.h"
-#include "util/timeout.h"
 #include "util/random.h"
+#include "util/timeout.h"
 
 bool init(void) {
 	// init PARI, 1GB stack, 1M primes
@@ -14,7 +14,7 @@ bool init(void) {
 
 	// init the signal handlers, etc. for timeout handling
 	if (!timeout_init()) return false;
-	
+
 	// Fix the mysterious isprime bug.
 	isprime(stoi(1));
 
@@ -36,12 +36,17 @@ int quit(int status) {
 
 int main(int argc, char *argv[]) {
 	memset(cfg, 0, sizeof(config_t));
-	
-	cfg->bits = 160;
+
+	if (argv[1]) {
+		cfg->bits = atoi(argv[1]);
+	} else {
+		cfg->bits = 256;
+	}
+
 	cfg->method |= METHOD_ANOMALOUS;
 	cfg->random = RANDOM_ALL;
 	cfg->unique = true;
-	cfg->count = 2;
+	cfg->count = 1;
 	cfg->threads = 1;
 	cfg->thread_memory = cfg->bits * 2000000;
 
@@ -49,7 +54,7 @@ int main(int argc, char *argv[]) {
 		return quit(EXIT_FAILURE);
 	}
 
-	int status =  cm_do();
+	int status = cm_do();
 
 	return quit(status);
 }
