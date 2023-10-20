@@ -15,71 +15,15 @@
 #include "util/str.h"
 
 static void cm_ginit(gen_f *generators, bool prime) {
-	// SEED unused.
 	generators[OFFSET_SEED] = &gen_skip;
-
-	// Setup stuff so it can be overridden.
-	if (cfg->unique) {
-		generators[OFFSET_GENERATORS] = &gens_gen_one;
-	} else {
-		generators[OFFSET_GENERATORS] = &gens_gen_any;
-	}
-
-	if (cfg->metadata) {
-		generators[OFFSET_METADATA] = &metadata_gen;
-	} else {
-		generators[OFFSET_METADATA] = &gen_skip;
-	}
-
-	switch (cfg->points.type) {
-		case POINTS_RANDOM:
-			if (cfg->points.amount) {
-				generators[OFFSET_POINTS] = &points_gen_random;
-			} else {
-				generators[OFFSET_POINTS] = &point_gen_random;
-			}
-			break;
-		case POINTS_PRIME:
-			generators[OFFSET_POINTS] = &points_gen_prime;
-			break;
-		case POINTS_NONPRIME:
-			generators[OFFSET_POINTS] = &points_gen_nonprime;
-			break;
-		case POINTS_ALL:
-			generators[OFFSET_POINTS] = &points_gen_allgroups;
-			break;
-		case POINTS_NONE:
-			generators[OFFSET_POINTS] = &gen_skip;
-			break;
-	}
-
-	// Now do the actual CM setup.
-	if (cfg->method == METHOD_CM) {
-		generators[OFFSET_FIELD] = &gen_skip;
-		generators[OFFSET_A] = &gen_skip;
-		generators[OFFSET_B] = &gen_skip;
-		if (prime) {
-			generators[OFFSET_CURVE] = &cm_gen_curve_prime;
-			generators[OFFSET_POINTS] = &points_gen_prime;
-		} else {
-			generators[OFFSET_CURVE] = &cm_gen_curve_any;
-		}
-		generators[OFFSET_ORDER] = &cm_gen_order;
-	} else if (cfg->method == METHOD_ANOMALOUS) {
-		generators[OFFSET_FIELD] = &anomalous_gen_field;
-		generators[OFFSET_A] = &gen_skip;
-		generators[OFFSET_B] = &anomalous_gen_equation;
-		generators[OFFSET_CURVE] = &curve_gen_any;
-		generators[OFFSET_ORDER] = &anomalous_gen_order;
-	} else if (cfg->method == METHOD_SUPERSINGULAR) {
-		if (cfg->random & RANDOM_FIELD) {
-			generators[OFFSET_FIELD] = &field_gen_random;
-		}
-		generators[OFFSET_A] = &gen_skip;
-		generators[OFFSET_B] = &supersingular_gen_equation;
-		generators[OFFSET_CURVE] = &curve_gen_any;
-		generators[OFFSET_ORDER] = &supersingular_gen_order;
-	}
+	generators[OFFSET_METADATA] = &gen_skip;
+	generators[OFFSET_GENERATORS] = &gens_gen_one;
+	generators[OFFSET_POINTS] = &gen_skip;
+	generators[OFFSET_FIELD] = &anomalous_gen_field;
+	generators[OFFSET_A] = &gen_skip;
+	generators[OFFSET_B] = &anomalous_gen_equation;
+	generators[OFFSET_CURVE] = &curve_gen_any;
+	generators[OFFSET_ORDER] = &anomalous_gen_order;
 }
 
 static void cm_ainit(arg_t **gen_argss, arg_t **check_argss,
