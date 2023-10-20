@@ -5,21 +5,7 @@
 #include "order.h"
 #include "exhaustive/arg.h"
 #include "field.h"
-#include "io/input.h"
 #include "math/koblitz.h"
-
-GENERATOR(order_gen_input) {
-	pari_sp ltop = avma;
-	GEN ord = input_int("order", cfg->bits);
-	if (gequalm1(ord)) {
-		avma = ltop;
-		return -4;
-	} else {
-		curve->order = ord;
-		obj_insert_shallow(curve->curve, 1, ord);
-		return 1;
-	}
-}
 
 GENERATOR(order_gen_any) {
 	pari_sp ltop = avma;

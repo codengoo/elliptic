@@ -80,24 +80,6 @@ GENERATOR(brainpool_gen_seed_argument) {
 	return 1;
 }
 
-GENERATOR(brainpool_gen_seed_input) {
-	pari_sp ltop = avma;
-
-	GEN str = input_string("seed:");
-	const char *cstr = GSTR(str);
-	if (!brainpool_seed_valid(cstr)) {
-		fprintf(err, "SEED must be exactly 160 bits(40 hex characters).\n");
-		avma = ltop;
-		return 0;
-	}
-
-	seed_t *seed = brainpool_new();
-	seed->seed = bits_from_hex(str_is_hex(cstr));
-	seed_wv(seed);
-	curve->seed = seed;
-	return 1;
-}
-
 GENERATOR(brainpool_gen_field) {
 	pari_sp btop = avma;
 	seed_t *seed = curve->seed;

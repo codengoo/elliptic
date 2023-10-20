@@ -1,9 +1,9 @@
 #include <pari/pari.h>
 #include "cm/cm.h"
 #include "exhaustive/exhaustive.h"
-#include "io/input.h"
 #include "io/output.h"
 #include "util/timeout.h"
+#include "util/random.h"
 
 bool init(void) {
 	// init PARI, 1GB stack, 1M primes
@@ -26,9 +26,6 @@ bool init(void) {
 	// open outfile
 	if (!output_init()) return false;
 
-	// open infile
-	if (!input_init()) return false;
-
 	return true;
 }
 
@@ -38,7 +35,6 @@ int quit(int status) {
 	timeout_quit();
 
 	output_quit();
-	input_quit();
 
 	return status;
 }

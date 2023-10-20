@@ -1,7 +1,3 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2017-2018 J08nY
- */
 #include "cm.h"
 #include "anomalous.h"
 #include "cm_any.h"
@@ -78,8 +74,6 @@ static void cm_ginit(gen_f *generators, bool prime) {
 	} else if (cfg->method == METHOD_SUPERSINGULAR) {
 		if (cfg->random & RANDOM_FIELD) {
 			generators[OFFSET_FIELD] = &field_gen_random;
-		} else {
-			generators[OFFSET_FIELD] = &field_gen_input;
 		}
 		generators[OFFSET_A] = &gen_skip;
 		generators[OFFSET_B] = &supersingular_gen_equation;

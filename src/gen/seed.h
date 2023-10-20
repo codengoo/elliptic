@@ -8,7 +8,6 @@
 #ifndef ECGEN_GEN_SEED_H
 #define ECGEN_GEN_SEED_H
 
-#include "io/input.h"
 #include "misc/types.h"
 
 /**

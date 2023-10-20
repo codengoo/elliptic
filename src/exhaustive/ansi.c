@@ -10,6 +10,7 @@
 #include "util/bits.h"
 #include "util/memory.h"
 #include "util/str.h"
+#include "util/random.h"
 
 static seed_t *ansi_new() {
 	seed_t *result = seed_new();
@@ -48,25 +49,6 @@ GENERATOR(ansi_gen_seed_random) {
 GENERATOR(ansi_gen_seed_argument) {
 	seed_t *seed = ansi_new();
 	seed->seed = bits_from_hex(str_is_hex(cfg->seed));
-	seed_hash(seed);
-	seed_tsh(seed);
-	curve->seed = seed;
-	return 1;
-}
-
-GENERATOR(ansi_gen_seed_input) {
-	pari_sp ltop = avma;
-
-	GEN str = input_string("seed:");
-	const char *cstr = GSTR(str);
-	if (!ansi_seed_valid(cstr)) {
-		fprintf(err, "SEED must be at least 160 bits(40 hex characters).\n");
-		avma = ltop;
-		return 0;
-	}
-
-	seed_t *seed = ansi_new();
-	seed->seed = bits_from_hex(str_is_hex(cstr));
 	seed_hash(seed);
 	seed_tsh(seed);
 	curve->seed = seed;

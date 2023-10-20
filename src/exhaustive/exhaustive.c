@@ -70,14 +70,10 @@ static void exhaustive_ginit(gen_f *generators) {
 				} else {
 					if (cfg->random & RANDOM_SEED) {
 						generators[OFFSET_SEED] = &ansi_gen_seed_random;
-					} else {
-						generators[OFFSET_SEED] = &ansi_gen_seed_input;
 					}
 				}
 				if (cfg->random & RANDOM_FIELD) {
 					generators[OFFSET_FIELD] = &field_gen_random;
-				} else {
-					generators[OFFSET_FIELD] = &field_gen_input;
 				}
 				generators[OFFSET_A] = &gen_skip;
 				generators[OFFSET_B] = &ansi_gen_equation;
@@ -88,8 +84,6 @@ static void exhaustive_ginit(gen_f *generators) {
 				} else {
 					if (cfg->random & RANDOM_SEED) {
 						generators[OFFSET_SEED] = &brainpool_gen_seed_random;
-					} else {
-						generators[OFFSET_SEED] = &brainpool_gen_seed_input;
 					}
 				}
 				generators[OFFSET_FIELD] = &brainpool_gen_field;
@@ -105,8 +99,6 @@ static void exhaustive_ginit(gen_f *generators) {
 					if (cfg->random & RANDOM_SEED) {
 						generators[OFFSET_SEED] =
 						    &brainpool_rfc_gen_seed_random;
-					} else {
-						generators[OFFSET_SEED] = &brainpool_rfc_gen_seed_input;
 					}
 				}
 				generators[OFFSET_FIELD] = &brainpool_gen_field;
@@ -134,8 +126,6 @@ static void exhaustive_ginit(gen_f *generators) {
 
 		if (cfg->random & RANDOM_FIELD) {
 			generators[OFFSET_FIELD] = &field_gen_random;
-		} else {
-			generators[OFFSET_FIELD] = &field_gen_input;
 		}
 
 		if (cfg->koblitz) {
@@ -153,14 +143,10 @@ static void exhaustive_ginit(gen_f *generators) {
 		} else {
 			if (cfg->random & RANDOM_A) {
 				generators[OFFSET_A] = &a_gen_random;
-			} else {
-				generators[OFFSET_A] = &a_gen_input;
 			}
 
 			if (cfg->random & RANDOM_B) {
 				generators[OFFSET_B] = &b_gen_random;
-			} else {
-				generators[OFFSET_B] = &b_gen_input;
 			}
 		}
 

@@ -23,10 +23,6 @@ GENERATOR(brainpool_rfc_gen_seed_random) {
 	brainpool_delegate(brainpool_gen_seed_random);
 }
 
-GENERATOR(brainpool_rfc_gen_seed_input) {
-	brainpool_delegate(brainpool_gen_seed_input);
-}
-
 #undef brainpool_delegate
 
 GENERATOR(brainpool_rfc_gen_equation) {

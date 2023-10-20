@@ -1,12 +1,8 @@
-/*
- * ecgen, tool for generating Elliptic curve domain parameters
- * Copyright (C) 2017-2018 J08nY
- */
 #include "field.h"
-#include "io/input.h"
 #include "io/output.h"
 #include "math/poly.h"
 #include "misc/compat.h"
+#include "util/random.h"
 
 static GEN field_primer(unsigned long bits) { return random_prime(bits); }
 
@@ -33,90 +29,8 @@ GENERATOR(field_gen_random) {
 	}
 }
 
-GENERATOR(field_gen_input) {
-	pari_sp ltop = avma;
-	switch (cfg->field) {
-		case FIELD_PRIME: {
-			GEN p = input_prime("p:", cfg->bits);
-			if (gequalm1(p)) {
-				avma = ltop;
-				return 0;
-			} else if (equalii(p, gen_m2)) {
-				avma = ltop;
-				return INT_MIN;
-			}
-			curve->field = p;
-			return 1;
-		}
-		case FIELD_BINARY: {
-			GEN m = input_short("m:");
-			if (!equalis(m, cfg->bits)) {
-				avma = ltop;
-				return 0;
-			}
-
-			GEN e1 = input_short("e1:");
-			if (equalii(e1, gen_m1) || gcmp(e1, m) > 0) {
-				avma = ltop;
-				return 0;
-			}
-			GEN e2 = input_short("e2:");
-			if (equalii(e2, gen_m1) || gcmp(e2, m) > 0) {
-				avma = ltop;
-				return 0;
-			}
-			GEN e3 = input_short("e3:");
-			if (equalii(e3, gen_m1) || gcmp(e3, m) > 0) {
-				avma = ltop;
-				return 0;
-			}
-
-			if (isintzero(e1) && isintzero(e2) && isintzero(e3)) {
-				fprintf(err, "At least one exponent must be nonzero.\n");
-				avma = ltop;
-				return 0;
-			}
-
-			GEN v = gtovec0(gen_0, cfg->bits + 1);
-			gel(v, itos(m) + 1) = gen_1;
-			if (gsigne(e1) == 1) gel(v, itos(e1) + 1) = gen_1;
-			if (gsigne(e2) == 1) gel(v, itos(e2) + 1) = gen_1;
-			if (gsigne(e3) == 1) gel(v, itos(e3) + 1) = gen_1;
-			gel(v, 1) = gen_1;
-
-			GEN poly = gmul(gtopolyrev(v, -1), gmodulss(1, 2));
-			if (!polisirreducible(poly)) {
-				fprintf(err, "Polynomial is reducible.\n");
-				avma = ltop;
-				return 0;
-			}
-
-			curve->field = gerepilecopy(ltop, ffgen(poly, -1));
-			return 1;
-		}
-		default:
-			return INT_MIN; /* NOT REACHABLE */
-	}
-}
-
 static GEN field = NULL;
 static curve_t *curve_field = NULL;
-
-GENERATOR(field_gen_once) {
-	if (field && curve_field == curve) {
-		curve->field = gcopy(field);
-		return 1;
-	}
-
-	int inp = field_gen_input(curve, args, state);
-	if (inp > 0) {
-		field = gclone(curve->field);
-		curve_field = curve;
-		return 1;
-	} else {
-		return 0;
-	}
-}
 
 GEN field_params(GEN field) {
 	pari_sp ltop = avma;
