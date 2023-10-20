@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "curve.h": "c"
+        "curve.h": "c",
+        "exhaustive.h": "c",
+        "metadata.h": "c"
     }
 }

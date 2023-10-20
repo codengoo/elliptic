@@ -11,7 +11,6 @@
 #include "gen/metadata.h"
 #include "gen/point.h"
 #include "obj/curve.h"
-#include "supersingular.h"
 #include "util/str.h"
 
 static void cm_ginit(gen_f *generators, bool prime) {
@@ -28,32 +27,17 @@ static void cm_ginit(gen_f *generators, bool prime) {
 
 static void cm_ainit(arg_t **gen_argss, arg_t **check_argss,
                      const char *order_s) {
-	if (cfg->method == METHOD_CM) {
-		arg_t *curve_arg = arg_new();
-		arg_t *order_arg = arg_new();
-		char *order = try_strdup(order_s);
-		curve_arg->args = order;
-		curve_arg->nargs = 1;
-		order_arg->args = order;
-		order_arg->nargs = 1;
-		order_arg->allocd = order;
-		gen_argss[OFFSET_CURVE] = curve_arg;
-		gen_argss[OFFSET_ORDER] = order_arg;
-	}
-
-	if (cfg->method == METHOD_ANOMALOUS) {
-		arg_t *field_arg = arg_new();
-		arg_t *eq_arg = arg_new();
-		size_t *i = try_calloc(sizeof(size_t));
-		*i = 3;
-		field_arg->args = i;
-		field_arg->nargs = 1;
-		eq_arg->args = i;
-		eq_arg->nargs = 1;
-		eq_arg->allocd = i;
-		gen_argss[OFFSET_FIELD] = field_arg;
-		gen_argss[OFFSET_B] = eq_arg;
-	}
+	arg_t *field_arg = arg_new();
+	arg_t *eq_arg = arg_new();
+	size_t *i = try_calloc(sizeof(size_t));
+	*i = 3;
+	field_arg->args = i;
+	field_arg->nargs = 1;
+	eq_arg->args = i;
+	eq_arg->nargs = 1;
+	eq_arg->allocd = i;
+	gen_argss[OFFSET_FIELD] = field_arg;
+	gen_argss[OFFSET_B] = eq_arg;
 
 	if (cfg->points.type == POINTS_RANDOM) {
 		arg_t *points_arg = arg_new();
